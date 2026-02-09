@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: api-gateway
+
+  main:
+    web-application-type: reactive
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+
+        - id: service
+          uri: lb://SERVICE
+          predicates:
+            - Path=/jobs/**
+
+        - id: application-service
+          uri: lb://APPLICATION-SERVICE
+          predicates:
+            - Path=/applications/**
+
+server:
+  port: 8080
+
+jwt:
+  secret: jobportal-secret-key-256-bit-length-required-123456
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
